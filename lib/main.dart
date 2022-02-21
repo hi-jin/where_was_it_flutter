@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           appBarTheme: AppBarTheme(
-            titleTextStyle: kDefaultTextStyle,
             color: Colors.teal,
           ),
-          textTheme: const TextTheme(
+          textTheme: TextTheme(
+            headline6: kDefaultTextStyle.copyWith(fontSize: 30.0),
             bodyText2: kDefaultTextStyle,
           ),
           colorScheme: ColorScheme.fromSwatch()),
