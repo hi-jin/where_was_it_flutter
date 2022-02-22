@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 
 class CreatePlaceScreen extends StatefulWidget {
   static String id = UniqueKey().toString();
+  Place? place;
 
-  const CreatePlaceScreen({Key? key}) : super(key: key);
+  CreatePlaceScreen({Key? key, this.place}) : super(key: key);
 
   @override
   _CreatePlaceScreenState createState() => _CreatePlaceScreenState();
@@ -33,6 +35,14 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
     _tagController = TextEditingController();
     _descController = TextEditingController();
     _scrollController = ScrollController();
+
+    if (widget.place != null) {
+      _placeNameController.text = widget.place!.name;
+      _descController.text = widget.place!.desc;
+      _tags = widget.place!.tags;
+      _visitDate = widget.place!.visitDate;
+      _starPoint = widget.place!.starPoint;
+    }
   }
 
   Wrap _drawTagCardList(Set<String> tags) {
@@ -100,16 +110,18 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
         // resizeToAvoidBottomInset: false, // textfield 전시되는 경우, 화면 겹치는 오류 해결
         appBar: AppBar(
           title: GestureDetector(
-            child: const Text("그때 거기"),
+            child: Text(widget.place == null ? "그때 거기" : "그때 거기 [수정하기]"),
             onTap: () {
-              Navigator.popUntil(context, (route) => route.isFirst); // 첫 화면까지 pop
+              Navigator.popUntil(
+                  context, (route) => route.isFirst); // 첫 화면까지 pop
             },
           ),
         ),
         body: SingleChildScrollView(
           controller: _scrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
             child: Column(
               children: [
                 Row(
@@ -206,9 +218,12 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                   style: kDefaultTextStyle.copyWith(fontSize: 25.0),
                 ),
                 TextField(
+                  controller: _descController,
                   onTap: () {
                     Timer(Duration(milliseconds: 300), () {
-                      _scrollController.animateTo(500.0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                      _scrollController.animateTo(500.0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease);
                     });
                   },
                   keyboardType: TextInputType.multiline,

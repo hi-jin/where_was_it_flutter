@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
+import 'package:where_was_it_flutter/data/constants.dart';
+import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:word_break_text/word_break_text.dart';
 
 class PlaceCard extends StatelessWidget {
@@ -32,16 +34,30 @@ class PlaceCard extends StatelessWidget {
     return Card(
       child: GestureDetector(
         onTap: () {
-          if (desc != "") {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(placeName),
-                    content: WordBreakText(desc),
-                  );
-                });
-          }
+          if (desc == "") desc = " ";
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(placeName),
+                  content: WordBreakText(desc),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreatePlaceScreen(
+                                        place: place,
+                                      )));
+                        },
+                        child: Text(
+                          "수정하기",
+                          style: kDefaultTextStyle,
+                        )),
+                  ],
+                );
+              });
         },
         child: ListTile(
           title: Row(
