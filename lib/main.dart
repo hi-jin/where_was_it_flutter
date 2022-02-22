@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
+import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:where_was_it_flutter/screens/loading_screen.dart';
 import 'package:where_was_it_flutter/screens/main_screen.dart';
 
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         LoadingScreen.id: (context) => LoadingScreen(),
         MainScreen.id: (context) => MainScreen(),
+        CreatePlaceScreen.id: (context) => CreatePlaceScreen(),
       },
     );
   }

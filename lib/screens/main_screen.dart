@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/components/place_card.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
+import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static String id = UniqueKey().toString();
@@ -174,8 +175,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, CreatePlaceScreen.id);
+        },
       ),
     );
   }
