@@ -26,23 +26,45 @@ class PlaceCard extends StatelessWidget {
     int starPoint = place.starPoint;
     DateTime visitDate = place.visitDate;
     Set<String> tags = place.tags;
+    int visitCount = place.visitCount;
+    String desc = place.desc;
 
     return Card(
-      child: ListTile(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(placeName),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            drawStarPoint(starPoint),
-            WordBreakText("#${tags.join(" #")}"),
-            Text(
-                "최근 방문 ${visitDate.month}월 ${visitDate.day}일, ${visitDate.year}"),
-          ],
+      child: GestureDetector(
+        onTap: () {
+          if (desc != "") {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(placeName),
+                    content: WordBreakText(desc),
+                  );
+                });
+          }
+        },
+        child: ListTile(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(placeName),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              drawStarPoint(starPoint),
+              WordBreakText("#${tags.join(" #")}"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      "최근 방문 ${visitDate.month}월 ${visitDate.day}일, ${visitDate.year}"),
+                  Text("방문 횟수 $visitCount회")
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

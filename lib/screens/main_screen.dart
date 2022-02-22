@@ -60,7 +60,8 @@ class _MainScreenState extends State<MainScreen> {
           name: "진구네 집밥",
           starPoint: 5,
           visitDate: DateTime(2021, 12, 2),
-          tags: {"진구", "현준", "덮밥"}),
+          tags: {"진구", "현준", "덮밥"},
+          desc: "국밥이 참 친절하고 사장님이 맛있어요"),
       Place(
           name: "역전할머니맥주",
           starPoint: 3,
@@ -140,7 +141,9 @@ class _MainScreenState extends State<MainScreen> {
                               : Theme.of(context).cardColor,
                           border: Border.all(color: Colors.teal.shade100),
                         ),
-                        child: _starPointOrder && _isListReversed ? Text("낮은별점순"): Text("높은별점순"),
+                        child: _starPointOrder && _isListReversed
+                            ? Text("낮은별점순")
+                            : Text("높은별점순"),
                       ),
                       onTap: () {
                         _setStarPointOrder();
@@ -156,7 +159,9 @@ class _MainScreenState extends State<MainScreen> {
                               : Theme.of(context).cardColor,
                           border: Border.all(color: Colors.teal.shade100),
                         ),
-                        child: _visitDateOrder && _isListReversed ? Text("과거방문순"): Text("최근방문순"),
+                        child: _visitDateOrder && _isListReversed
+                            ? Text("과거방문순")
+                            : Text("최근방문순"),
                       ),
                       onTap: () {
                         _setVisitDateOrder();

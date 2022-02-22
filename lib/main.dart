@@ -15,20 +15,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            color: Colors.teal,
-          ),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Colors.teal,
-          ),
-          textTheme: TextTheme(
-            headline6: kDefaultTextStyle.copyWith(fontSize: 30.0),
-            // appBar.title
-            subtitle1: kDefaultTextStyle,
-            // ListTile.title
-            bodyText2: kDefaultTextStyle, // default
-          ),
-          iconTheme: IconThemeData(color: Colors.teal.shade700)),
+        colorScheme: ColorScheme.light(primary: Colors.teal),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.teal,
+        ),
+        textTheme: TextTheme(
+          headline6: kDefaultTextStyle.copyWith(fontSize: 30.0),
+          // appBar.title
+          subtitle1: kDefaultTextStyle,
+          // ListTile.title
+          bodyText2: kDefaultTextStyle, // default
+        ),
+        iconTheme: IconThemeData(color: Colors.teal.shade700),
+      ),
       initialRoute: LoadingScreen.id,
       routes: {
         LoadingScreen.id: (context) => LoadingScreen(),
