@@ -247,7 +247,25 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.send),
-          onPressed: () {},
+          onPressed: () {
+            if (widget.place == null) {
+              // 추가하기
+
+            } else {
+              // 수정하기
+              setState(() {
+                widget.place!.setName(_placeNameController.text);
+                widget.place!.setStarPoint(_starPoint);
+                widget.place!.setVisitDate(_visitDate);
+                widget.place!.setTags(_tags);
+                widget.place!.setDesc(_descController.text);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("수정되었습니다!", style: kDefaultTextStyle,),
+              ));
+            }
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
         ),
       ),
     );
