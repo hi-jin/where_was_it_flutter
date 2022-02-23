@@ -249,7 +249,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
           child: Icon(Icons.send),
           onPressed: () {
             if (widget.place == null) {
-              // 추가하기
+              // TODO 추가하기
 
             } else {
               // 수정하기
@@ -264,7 +264,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                 content: Text("수정되었습니다!", style: kDefaultTextStyle,),
               ));
             }
-            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pop(context, widget.place!);
           },
         ),
       ),

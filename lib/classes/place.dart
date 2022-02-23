@@ -4,7 +4,7 @@ class Place {
   DateTime visitDate;
   Set<String> tags;
   String desc;
-  int visitCount = 0;
+  int visitCount = 1;
 
   Place({required this.name, required this.starPoint, required this.visitDate, required this.tags, this.desc = ""});
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/screens/main_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
 
+    User.initUser();
     Timer(const Duration(seconds: 3), () {
       Navigator.pushNamedAndRemoveUntil(
           context, MainScreen.id, (route) => route.isCurrent);

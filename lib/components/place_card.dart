@@ -4,10 +4,16 @@ import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:word_break_text/word_break_text.dart';
 
-class PlaceCard extends StatelessWidget {
-  final Place place;
+class PlaceCard extends StatefulWidget {
+  Place place;
+  PlaceCard({Key? key, required this.place}) : super(key: key);
 
-  const PlaceCard({Key? key, required this.place}) : super(key: key);
+  @override
+  _PlaceCardState createState() => _PlaceCardState();
+}
+
+class _PlaceCardState extends State<PlaceCard> {
+
 
   Widget drawStarPoint(int starPoint) {
     List<Widget> starWidgetList = <Widget>[];
@@ -24,12 +30,12 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String placeName = place.name;
-    int starPoint = place.starPoint;
-    DateTime visitDate = place.visitDate;
-    Set<String> tags = place.tags;
-    int visitCount = place.visitCount;
-    String desc = place.desc;
+    String placeName = widget.place.name;
+    int starPoint = widget.place.starPoint;
+    DateTime visitDate = widget.place.visitDate;
+    Set<String> tags = widget.place.tags;
+    int visitCount = widget.place.visitCount;
+    String desc = widget.place.desc;
 
     return Card(
       child: GestureDetector(
@@ -43,13 +49,17 @@ class PlaceCard extends StatelessWidget {
                   content: WordBreakText(desc),
                   actions: [
                     TextButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async {
+                          Place editedPlace = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CreatePlaceScreen(
-                                        place: place,
-                                      )));
+                                    place: widget.place,
+                                  )));
+                          setState(() {
+                            widget.place = editedPlace;
+                          }); // 값 업데이트 후 pop
+                          Navigator.pop(context);
                         },
                         child: Text(
                           "수정하기",
@@ -86,3 +96,4 @@ class PlaceCard extends StatelessWidget {
     );
   }
 }
+
