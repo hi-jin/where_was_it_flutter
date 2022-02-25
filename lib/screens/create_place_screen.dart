@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
+import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 
@@ -251,20 +252,22 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
             if (widget.place == null) {
               // TODO 추가하기
 
+              Navigator.pop(context);
             } else {
               // 수정하기
               setState(() {
-                widget.place!.setName(_placeNameController.text);
-                widget.place!.setStarPoint(_starPoint);
-                widget.place!.setVisitDate(_visitDate);
-                widget.place!.setTags(_tags);
-                widget.place!.setDesc(_descController.text);
+                widget.place!.name = _placeNameController.text;
+                widget.place!.starPoint = _starPoint;
+                widget.place!.visitDate = _visitDate;
+                widget.place!.tags = _tags;
+                widget.place!.desc = _descController.text;
               });
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              User.saveUser();
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("수정되었습니다!", style: kDefaultTextStyle,),
               ));
+              Navigator.pop(context, widget.place!);
             }
-            Navigator.pop(context, widget.place!);
           },
         ),
       ),

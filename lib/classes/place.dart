@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Place {
   String name; // 15글자 제한
   int starPoint;
@@ -6,40 +8,32 @@ class Place {
   String desc;
   int visitCount = 1;
 
-  Place({required this.name, required this.starPoint, required this.visitDate, required this.tags, this.desc = ""});
+  Place({required this.name,
+    required this.starPoint,
+    required this.visitDate,
+    required this.tags,
+    this.desc = ""});
 
-  void setName(String name) {
-    if (name.length > 15) throw Exception("name length must be less than or equal to 15");
-    this.name = name;
+  String toJson() {
+    return jsonEncode({
+      "name": name,
+      "starPoint": starPoint,
+      "visitDate": visitDate.toString(),
+      "tags": tags.toList(),
+      "desc": desc,
+      "visitCount": visitCount,
+    });
   }
 
-  void setStarPoint(int starPoint) {
-    if (starPoint < 0 || starPoint > 5) throw Exception("starPoint must be an integer between 0 and 5");
-    this.starPoint = starPoint;
-  }
-
-  void setVisitDate(DateTime visitDate) {
-    this.visitDate = visitDate;
-  }
-
-  void setTags(Iterable<String> tags) {
-    this.tags = <String>{};
-    this.tags.addAll(tags);
-  }
-
-  void addTag(String tag) {
-    tags.add(tag);
-  }
-
-  void setVisitCount(int visitCount) {
-    this.visitCount = visitCount;
-  }
-
-  void addVisitCount() {
-    visitCount++;
-  }
-
-  void setDesc(String desc) {
-    this.desc = desc;
+  static Place fromJson(Map<String, dynamic> placeData) {
+    Place place = Place(
+      name: placeData["name"],
+      starPoint: placeData["starPoint"],
+      visitDate: DateTime.parse(placeData["visitDate"]),
+      tags: Set<String>.from(placeData["tags"]),
+      desc: placeData["desc"],
+    );
+    place.visitCount = placeData["visitCount"];
+    return place;
   }
 }

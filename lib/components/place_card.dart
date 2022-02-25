@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
+import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:word_break_text/word_break_text.dart';
 
 class PlaceCard extends StatefulWidget {
   Place place;
+
   PlaceCard({Key? key, required this.place}) : super(key: key);
 
   @override
@@ -13,8 +15,6 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
-
-
   Widget drawStarPoint(int starPoint) {
     List<Widget> starWidgetList = <Widget>[];
     for (var i = 1; i <= 5; i++) {
@@ -50,16 +50,19 @@ class _PlaceCardState extends State<PlaceCard> {
                   actions: [
                     TextButton(
                         onPressed: () async {
-                          Place editedPlace = await Navigator.push(
+                          await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CreatePlaceScreen(
-                                    place: widget.place,
-                                  )));
-                          setState(() {
-                            widget.place = editedPlace;
-                          }); // 값 업데이트 후 pop
-                          Navigator.pop(context);
+                                        place: widget.place,
+                                      ))).then((value) {
+                            if (value != null) {
+                              setState(() {
+                                widget.place = value;
+                              });
+                            }
+                          });
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         child: Text(
                           "수정하기",
@@ -96,4 +99,3 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 }
-
