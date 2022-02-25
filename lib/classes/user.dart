@@ -26,20 +26,20 @@ class User {
       for (var stringPlace in data) {
         placeList.add(Place.fromJson(stringPlace));
       }
-    } catch(e) {
+    } catch (e) {
       print(e);
 
       placeList = <Place>[];
     }
 
-    placeList.sort((a, b) {
-      return b.visitDate.compareTo(a.visitDate);
-    }); // palceList 최근방문순으로 정렬
-
     return placeList;
   } // TODO: Storage이용하기
 
   static void saveUser() async {
+    visitedPlaceList.sort((a, b) {
+      return b.visitDate.compareTo(a.visitDate);
+    }); // palceList 최근방문순으로 정렬
+
     Directory documents = await getApplicationDocumentsDirectory();
     File userFile = File("${documents.path}/user.txt");
 

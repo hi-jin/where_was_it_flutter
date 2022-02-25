@@ -316,13 +316,12 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                     .indexOf(place.name);
                 if (index > -1) {
                   // 기존 방문 장소일 경우
+                  // 목록에서 제외했다가, 맨 처음으로 순서를 올림 (가장 최근 방문이므로)
                   place.visitCount =
                       ++User.visitedPlaceList[index].visitCount; // 방문 횟수 증가
-                  User.visitedPlaceList[index] = place;
-                } else {
-                  // 기존 방문 장소가 아닐 경우
-                  User.visitedPlaceList.insert(0, place);
+                  User.visitedPlaceList.removeAt(index);
                 }
+                User.visitedPlaceList.insert(0, place);
                 User.saveUser(); // 데이터 저장
                 Navigator.pop(context);
               } else {
