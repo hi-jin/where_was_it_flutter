@@ -231,7 +231,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                 TextField(
                   controller: _tagController,
                   decoration: InputDecoration(
-                    hintText: "예시) 양식",
+                    hintText: "검색하기 편하도록 짧게! ex) 양식",
                     hintStyle: kDefaultTextStyle,
                     prefix: Text("> "),
                     suffixText: "${_tag.length}/$kPlaceNameMaxLength",
@@ -249,6 +249,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                     setState(() {
                       _tags.add(val);
                       _tagController.text = "";
+                      _tag = "";
                     });
                   },
                 ), // 태그 입력

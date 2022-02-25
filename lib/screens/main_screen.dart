@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/place_card.dart';
+import 'package:where_was_it_flutter/components/tag.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 
@@ -15,12 +16,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late TextEditingController _searchController; // 검색창 textfield controller
+  late TextEditingController _tagController;
   late List<Place> _placeList = User.visitedPlaceList;
 
   bool _starPointOrder = false; // 별점순
   bool _visitDateOrder = true; // 방문순
   bool _isListReversed = false; // placeList의 정렬 순서 변수
+
+  String _tag = ""; // 현재 입력중인 태그
+  final Set<String> _tags = {};
 
   void _setStarPointOrder() {
     if (!_starPointOrder) {
@@ -55,24 +59,64 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController();
+    _tagController = TextEditingController();
   }
 
   List<Widget> drawPlaceCardList(List<Place> placeList) {
     List<Widget> placeCardList = <Widget>[];
 
     for (var i = 0; i < placeList.length; i++) {
-      placeCardList.add(PlaceCard(place: placeList[i], removeCard: () {
-        setState(() {
-          placeCardList.removeAt(i);
-          _placeList.removeAt(i);
-          User.saveUser();
-        });
-      },));
+      placeCardList.add(PlaceCard(
+        place: placeList[i],
+        removeCard: () {
+          setState(() {
+            placeCardList.removeAt(i);
+            _placeList.removeAt(i);
+            User.saveUser();
+          });
+        },
+      ));
     }
 
     return placeCardList;
   } // TODO: placeList 받아오기
+
+
+  Wrap _drawTagCardList(Set<String> tags) {
+    List<Widget> tagCardList = <Widget>[];
+    for (String tag in tags) {
+      tagCardList.add(TagCard(
+        tag: tag,
+        removeTagFunc: () {
+          setState(() {
+            _tags.remove(tag);
+          });
+        },
+      ));
+    }
+
+    if (tags.isEmpty) {
+      _placeList = User.visitedPlaceList;
+    } else {
+      List<Place> searchedList = List<Place>.from(User.visitedPlaceList.where((element) => element.tags.containsAll(_tags) || _tags.contains(element.name)));
+      searchedList.sort((a, b) {
+        if (_tags.contains(a.name)) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      setState(() {
+        _placeList = searchedList;
+      });
+    }
+
+    return Wrap(
+      spacing: 8.0, // 간격
+      runSpacing: 3.0,
+      children: tagCardList,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,13 +141,32 @@ class _MainScreenState extends State<MainScreen> {
                   style: kDefaultTextStyle.copyWith(fontSize: 30.0),
                 ),
                 TextField(
-                  controller: _searchController,
+                  controller: _tagController,
                   decoration: InputDecoration(
                     hintText: "기억나는 단어들을 여기에 입력해봐!",
                     hintStyle: kDefaultTextStyle,
                     prefix: Text("> "),
+                    suffixText: "${_tag.length}/$kPlaceNameMaxLength",
+                    counterText: "",
                   ),
-                ), // 키워드 검색 텍스트필드
+                  onChanged: (val) {
+                    setState(() {
+                      _tag = val;
+                    });
+                  },
+                  maxLength: kPlaceNameMaxLength,
+                  // counter text를 별도로 입력할 필요 없이, maxlength 사용 가능
+                  onSubmitted: (val) {
+                    if (val == "") return;
+                    setState(() {
+                      _tags.add(val);
+                      _tagController.text = "";
+                      _tag = "";
+                    });
+                  },
+                ), // 검색 태그 입력
+                const SizedBox(height: 5.0),
+                _drawTagCardList(_tags), // 태그
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
