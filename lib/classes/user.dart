@@ -45,6 +45,10 @@ class User {
   }
 
   static void saveUser() async {
+    visitedPlaceList.sort((a, b) {
+      return b.visitDate.compareTo(a.visitDate);
+    }); // palceList 최근방문순으로 정렬
+
     Directory documents = await getApplicationDocumentsDirectory();
     File userFile = File("${documents.path}/user.txt");
 

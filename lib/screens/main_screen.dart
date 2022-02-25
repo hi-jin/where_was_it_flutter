@@ -33,30 +33,40 @@ class _MainScreenState extends State<MainScreen> {
   void _setStarPointOrder() {
     if (!_starPointOrder) {
       _isListReversed = true;
-      _placeList.sort((a, b) {
-        return a.starPoint.compareTo(b.starPoint);
-      });
     }
     setState(() {
+      if (_isListReversed) {
+        _placeList.sort((a, b) {
+          return b.starPoint.compareTo(a.starPoint);
+        });
+      } else {
+        _placeList.sort((a, b) {
+          return a.starPoint.compareTo(b.starPoint);
+        });
+      }
       _starPointOrder = true;
       _visitDateOrder = false;
       _isListReversed = !_isListReversed;
-      _placeList = List<Place>.from(_placeList.reversed);
     });
   }
 
   void _setVisitDateOrder() {
     if (!_visitDateOrder) {
       _isListReversed = true;
-      _placeList.sort((a, b) {
-        return a.visitDate.compareTo(b.visitDate);
-      });
     }
     setState(() {
+      if (_isListReversed) {
+        _placeList.sort((a, b) {
+          return b.visitDate.compareTo(a.visitDate);
+        });
+      } else {
+        _placeList.sort((a, b) {
+          return a.visitDate.compareTo(b.visitDate);
+        });
+      }
       _starPointOrder = false;
       _visitDateOrder = true;
       _isListReversed = !_isListReversed;
-      _placeList = List<Place>.from(_placeList.reversed);
     });
   }
 
