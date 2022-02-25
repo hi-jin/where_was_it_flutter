@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
@@ -44,6 +45,15 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
       _visitDate = widget.place!.visitDate;
       _starPoint = widget.place!.starPoint;
     }
+  }
+
+  @override
+  void dispose() {
+    _placeNameController.dispose();
+    _tagController.dispose();
+    _descController.dispose();
+    _scrollController.dispose(); // 자원 낭비를 막기 위해 dispose 권장
+    super.dispose();
   }
 
   Wrap _drawTagCardList(Set<String> tags) {
@@ -165,22 +175,53 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                     ),
                   ],
                 ),
-                TextField(
-                  controller: _placeNameController,
-                  decoration: InputDecoration(
-                    hintText: "장소 이름을 여기에 입력해줘!",
-                    hintStyle: kDefaultTextStyle,
-                    prefix: Text("> "),
-                    suffixText: "${_placeName.length}/$kPlaceNameMaxLength",
-                    counterText: "",
-                  ),
-                  onChanged: (val) {
-                    setState(() {
-                      _placeName = val;
-                    });
+                Focus(
+                  onFocusChange: (val) {
+                    if (val == false) {
+                      // onSubmit에만 하면, 정말 제출했을 경우에만 실행되기 때문에, Focus 변경을 감지했다.
+
+                      // 방문했던 장소중 한 개의 곳을 입력한 경우
+                      // 새로운 장소를 만들면 안되고, 기존 장소의 방문 횟수를 늘려야 하므로 메시지를 표시한다.
+                      // 메시지 표시와 함꼐 수정할 수 있도록 안내한다.
+                      int index = List<String>.generate(
+                              User.visitedPlaceList.length,
+                              (index) => User.visitedPlaceList[index].name)
+                          .indexOf(_placeNameController.text);
+                      if (index > -1) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                                content: Text(
+                          "이전에 방문했던 장소입니다!",
+                          style: kDefaultTextStyle,
+                        )));
+                        setState(() {
+                          _starPoint = User.visitedPlaceList[index].starPoint;
+                          _descController.text =
+                              User.visitedPlaceList[index].desc;
+                          _tags = User.visitedPlaceList[index].tags;
+                        });
+                      }
+                    }
                   },
-                  maxLength:
-                      kPlaceNameMaxLength, // counter text를 별도로 입력할 필요 없이, maxlength 사용 가능
+                  child: EasyAutocomplete(
+                    controller: _placeNameController,
+                    decoration: InputDecoration(
+                      hintText: "장소 이름을 여기에 입력해줘!",
+                      hintStyle: kDefaultTextStyle,
+                      prefix: Text("> "),
+                      suffixText: "${_placeName.length}/$kPlaceNameMaxLength",
+                      counterText: "",
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        _placeName = val;
+                      });
+                    },
+                    suggestions: List<String>.generate(
+                        User.visitedPlaceList.length,
+                        (index) => User.visitedPlaceList[index].name),
+                    // 방문했던 장소를 토대로 suggestion 제시
+                  ),
                 ), // 장소이름
                 const SizedBox(height: 30.0),
                 Text(
@@ -210,7 +251,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                       _tagController.text = "";
                     });
                   },
-                ),
+                ), // 태그 입력
                 const SizedBox(height: 5.0),
                 _drawTagCardList(_tags), // 태그
                 const SizedBox(height: 30.0),
@@ -255,27 +296,53 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
             Set<String> tags = _tags;
             String desc = _descController.text;
 
-            if (widget.place == null) {
-              // TODO 추가하기
-              Place place = Place(name: name, starPoint: starPoint, visitDate: visitDate, tags: tags, desc: desc);
-              User.visitedPlaceList.insert(0, place);
-              User.saveUser(); // 데이터 저장
-
-              Navigator.pop(context);
-            } else {
-              // 수정하기
-              setState(() {
-                widget.place!.name = name;
-                widget.place!.starPoint = starPoint;
-                widget.place!.visitDate = visitDate;
-                widget.place!.tags = tags;
-                widget.place!.desc = desc;
-              });
-              User.saveUser(); // 데이터 저장
+            if (name == "" || desc == "") {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("수정되었습니다!", style: kDefaultTextStyle,),
-              ));
-              Navigator.pop(context, widget.place!);
+                  content: Text("모든 항목을 입력해주세요!", style: kDefaultTextStyle)));
+            } else if (tags.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("한 개 이상의 관련 단어를 입력해주세요!",
+                      style: kDefaultTextStyle)));
+            } else {
+              if (widget.place == null) {
+                Place place = Place(
+                    name: name,
+                    starPoint: starPoint,
+                    visitDate: visitDate,
+                    tags: tags,
+                    desc: desc);
+                int index = List<String>.generate(User.visitedPlaceList.length,
+                        (index) => User.visitedPlaceList[index].name)
+                    .indexOf(place.name);
+                if (index > -1) {
+                  // 기존 방문 장소일 경우
+                  place.visitCount =
+                      ++User.visitedPlaceList[index].visitCount; // 방문 횟수 증가
+                  User.visitedPlaceList[index] = place;
+                } else {
+                  // 기존 방문 장소가 아닐 경우
+                  User.visitedPlaceList.insert(0, place);
+                }
+                User.saveUser(); // 데이터 저장
+                Navigator.pop(context);
+              } else {
+                // 수정하기
+                setState(() {
+                  widget.place!.name = name;
+                  widget.place!.starPoint = starPoint;
+                  widget.place!.visitDate = visitDate;
+                  widget.place!.tags = tags;
+                  widget.place!.desc = desc;
+                });
+                User.saveUser(); // 데이터 저장
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                    "수정되었습니다!",
+                    style: kDefaultTextStyle,
+                  ),
+                ));
+                Navigator.pop(context, widget.place!);
+              }
             }
           },
         ),
