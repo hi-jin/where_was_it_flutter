@@ -68,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     if (User.needHelp) {
       WidgetsBinding.instance!.addPostFrameCallback((_) async {
         Timer(const Duration(milliseconds: 300),
-                () => ShowCaseWidget.of(context)!.startShowCase([one, two]));
+            () => ShowCaseWidget.of(context)!.startShowCase([one, two]));
       });
     }
   }

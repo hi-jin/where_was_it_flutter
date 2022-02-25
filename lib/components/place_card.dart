@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
@@ -55,16 +56,19 @@ class _PlaceCardState extends State<PlaceCard> {
                               builder: (context) {
                                 return AlertDialog(
                                   title: const Text("잠시만요!!"),
-                                  content:
-                                      const Text("삭제하면 되돌릴 수 없습니다.\n정말 삭제하시겠어요?"),
+                                  content: const Text(
+                                      "삭제하면 되돌릴 수 없습니다.\n정말 삭제하시겠어요?"),
                                   actions: [
                                     TextButton(
                                         onPressed: () {
                                           if (widget.removeCard != null) {
                                             widget.removeCard!();
-                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("삭제되었습니다!")));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text("삭제되었습니다!")));
                                           }
-                                          Navigator.popUntil(context, (route) => route.isFirst);
+                                          Navigator.popUntil(context,
+                                              (route) => route.isFirst);
                                         },
                                         child: Text(
                                           "네",
@@ -92,9 +96,12 @@ class _PlaceCardState extends State<PlaceCard> {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreatePlaceScreen(
-                                        place: widget.place,
-                                      ))).then((value) {
+                                  builder: (context) => ShowCaseWidget(
+                                          builder: Builder(
+                                        builder: (context) => CreatePlaceScreen(
+                                          place: widget.place,
+                                        ),
+                                      )))).then((value) {
                             if (value != null) {
                               setState(() {
                                 widget.place = value;
