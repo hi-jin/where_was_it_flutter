@@ -318,6 +318,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
             DateTime visitDate = _visitDate;
             Set<String> tags = _tags;
             String desc = _descController.text;
+            desc = desc.replaceAll("\n", " ");
 
             if (name == "" || desc == "") {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
