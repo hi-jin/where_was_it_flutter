@@ -29,13 +29,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
   String _tag = ""; // 현재 입력중인 태그
   Set<String> _tags = {};
   DateTime _visitDate =
-  DateTime(DateTime
-      .now()
-      .year, DateTime
-      .now()
-      .month, DateTime
-      .now()
-      .day);
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   @override
   void initState() {
@@ -56,8 +50,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
       WidgetsBinding.instance!.addPostFrameCallback((_) async {
         Timer(
             const Duration(milliseconds: 300),
-                () =>
-                ShowCaseWidget.of(context)!.startShowCase([
+            () => ShowCaseWidget.of(context)!.startShowCase([
                   four,
                 ]));
       });
@@ -150,7 +143,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
           child: SingleChildScrollView(
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
               child: Column(
                 children: [
                   Row(
@@ -159,35 +152,23 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                       Showcase(
                         key: four,
                         description:
-                        "예전에 다녀왔는데 추가를 못 했다구?\n그럼 여길 누르면 날짜를 바꿀 수 있어!",
+                            "예전에 다녀왔는데 추가를 못 했다구?\n그럼 여길 누르면 날짜를 바꿀 수 있어!",
                         descTextStyle: kDefaultTextStyle,
                         child: TextButton(
                           child: Text(
                             _visitDate ==
-                                DateTime(
-                                    DateTime
-                                        .now()
-                                        .year,
-                                    DateTime
-                                        .now()
-                                        .month,
-                                    DateTime
-                                        .now()
-                                        .day)
+                                    DateTime(
+                                        DateTime.now().year,
+                                        DateTime.now().month,
+                                        DateTime.now().day)
                                 ? "오늘"
                                 : _visitDate ==
-                                DateTime(
-                                    DateTime
-                                        .now()
-                                        .year,
-                                    DateTime
-                                        .now()
-                                        .month,
-                                    DateTime
-                                        .now()
-                                        .day - 1)
-                                ? "어제"
-                                : "그때",
+                                        DateTime(
+                                            DateTime.now().year,
+                                            DateTime.now().month,
+                                            DateTime.now().day - 1)
+                                    ? "어제"
+                                    : "그때",
                             style: kDefaultTextStyle.copyWith(fontSize: 25.0),
                           ),
                           onPressed: () async {
@@ -201,14 +182,37 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                             } else if (Platform.isIOS) {
                               value = await showCupertinoModalPopup(
                                   context: context,
-                                  builder: (context) =>
-                                      CupertinoDatePicker(
-                                          onDateTimeChanged: (val) {}));
+                                  builder: (context) => Container(
+                                      height: 500,
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 400,
+                                            child: CupertinoDatePicker(
+                                              initialDateTime: _visitDate,
+                                              minimumDate: DateTime(1900),
+                                              maximumDate: DateTime.now(),
+                                              onDateTimeChanged: (val) {
+                                                value = val;
+                                              },
+                                              mode:
+                                                  CupertinoDatePickerMode.date,
+                                            ),
+                                          ),
+                                          CupertinoButton(
+                                            onPressed: () {
+                                              Navigator.pop(context, value);
+                                            },
+                                            child: Text("확인"),
+                                          )
+                                        ],
+                                      )));
                             }
                             if (value != null) {
                               setState(() {
                                 _visitDate = DateTime(
-                                    value!.year, value.month, value.day);
+                                    value!.year, value!.month, value!.day);
                               });
                             }
                           },
@@ -229,16 +233,16 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                         // 새로운 장소를 만들면 안되고, 기존 장소의 방문 횟수를 늘려야 하므로 메시지를 표시한다.
                         // 메시지 표시와 함꼐 수정할 수 있도록 안내한다.
                         int index = List<String>.generate(
-                            User.visitedPlaceList.length,
+                                User.visitedPlaceList.length,
                                 (index) => User.visitedPlaceList[index].name)
                             .indexOf(_placeNameController.text);
                         if (index > -1) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                              content: Text(
-                                "이전에 방문했던 장소입니다!",
-                                style: kDefaultTextStyle,
-                              )));
+                                  content: Text(
+                            "이전에 방문했던 장소입니다!",
+                            style: kDefaultTextStyle,
+                          )));
                           setState(() {
                             _starPoint = User.visitedPlaceList[index].starPoint;
                             _descController.text =
@@ -264,7 +268,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                       },
                       suggestions: List<String>.generate(
                           User.visitedPlaceList.length,
-                              (index) => User.visitedPlaceList[index].name),
+                          (index) => User.visitedPlaceList[index].name),
                       // 방문했던 장소를 토대로 suggestion 제시
                     ),
                   ), // 장소이름
@@ -373,7 +377,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                   // 기존 방문 장소일 경우
                   // 목록에서 제외했다가, 맨 처음으로 순서를 올림 (가장 최근 방문이므로)
                   place.visitCount =
-                  ++User.visitedPlaceList[index].visitCount; // 방문 횟수 증가
+                      ++User.visitedPlaceList[index].visitCount; // 방문 횟수 증가
                   User.visitedPlaceList.removeAt(index);
                 }
                 User.visitedPlaceList.insert(0, place);
