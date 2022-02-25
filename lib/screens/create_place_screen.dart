@@ -245,30 +245,44 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                     "관련된 단어들을 입력해줘!",
                     style: kDefaultTextStyle.copyWith(fontSize: 25.0),
                   ),
-                  TextField(
-                    controller: _tagController,
-                    decoration: InputDecoration(
-                      hintText: "검색하기 편하도록 짧게! ex) 양식",
-                      hintStyle: kDefaultTextStyle,
-                      prefix: const Text("> "),
-                      suffixText: "${_tag.length}/$kPlaceNameMaxLength",
-                      counterText: "",
+                  Focus(
+                    onFocusChange: (val) {
+                      if (val == false) {
+                        if (_tagController.text != "") {
+                          setState(() {
+                            _tag = _tagController.text;
+                            _tags.add(_tag);
+                            _tagController.text = "";
+                            _tag = "";
+                          });
+                        }
+                      }
+                    },
+                    child: TextField(
+                      controller: _tagController,
+                      decoration: InputDecoration(
+                        hintText: "검색하기 편하도록 짧게! ex) 양식",
+                        hintStyle: kDefaultTextStyle,
+                        prefix: const Text("> "),
+                        suffixText: "${_tag.length}/$kPlaceNameMaxLength",
+                        counterText: "",
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          _tag = val;
+                        });
+                      },
+                      maxLength: kPlaceNameMaxLength,
+                      // counter text를 별도로 입력할 필요 없이, maxlength 사용 가능
+                      onSubmitted: (val) {
+                        if (val == "") return;
+                        setState(() {
+                          _tags.add(val);
+                          _tagController.text = "";
+                          _tag = "";
+                        });
+                      },
                     ),
-                    onChanged: (val) {
-                      setState(() {
-                        _tag = val;
-                      });
-                    },
-                    maxLength: kPlaceNameMaxLength,
-                    // counter text를 별도로 입력할 필요 없이, maxlength 사용 가능
-                    onSubmitted: (val) {
-                      if (val == "") return;
-                      setState(() {
-                        _tags.add(val);
-                        _tagController.text = "";
-                        _tag = "";
-                      });
-                    },
                   ), // 태그 입력
                   const SizedBox(height: 5.0),
                   _drawTagCardList(_tags), // 태그
