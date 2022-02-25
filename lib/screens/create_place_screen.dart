@@ -249,20 +249,29 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.send),
           onPressed: () {
+            String name = _placeNameController.text;
+            int starPoint = _starPoint;
+            DateTime visitDate = _visitDate;
+            Set<String> tags = _tags;
+            String desc = _descController.text;
+
             if (widget.place == null) {
               // TODO 추가하기
+              Place place = Place(name: name, starPoint: starPoint, visitDate: visitDate, tags: tags, desc: desc);
+              User.visitedPlaceList.insert(0, place);
+              User.saveUser(); // 데이터 저장
 
               Navigator.pop(context);
             } else {
               // 수정하기
               setState(() {
-                widget.place!.name = _placeNameController.text;
-                widget.place!.starPoint = _starPoint;
-                widget.place!.visitDate = _visitDate;
-                widget.place!.tags = _tags;
-                widget.place!.desc = _descController.text;
+                widget.place!.name = name;
+                widget.place!.starPoint = starPoint;
+                widget.place!.visitDate = visitDate;
+                widget.place!.tags = tags;
+                widget.place!.desc = desc;
               });
-              User.saveUser();
+              User.saveUser(); // 데이터 저장
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("수정되었습니다!", style: kDefaultTextStyle,),
               ));

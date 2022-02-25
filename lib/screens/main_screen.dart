@@ -151,8 +151,11 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, CreatePlaceScreen.id);
+        onPressed: () async {
+          await Navigator.pushNamed(context, CreatePlaceScreen.id);
+          setState(() {
+            _placeList = User.visitedPlaceList; // 화면 업데이트를 위해 새로 받아옴
+          });
         },
       ),
     );
