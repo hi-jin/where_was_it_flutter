@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/loading_screen.dart';
 
@@ -17,6 +18,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("ko", "KR"),
+      ],
       theme: ThemeData(
         colorScheme: const ColorScheme.light(primary: Colors.teal),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
