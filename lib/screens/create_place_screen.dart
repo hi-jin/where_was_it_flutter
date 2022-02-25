@@ -22,7 +22,6 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
   late TextEditingController _placeNameController;
   late TextEditingController _tagController;
   late TextEditingController _descController;
-  late ScrollController _scrollController;
   String _placeName = "";
   int _starPoint = 3; // 점수
   String _tag = ""; // 현재 입력중인 태그
@@ -36,7 +35,6 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
     _placeNameController = TextEditingController();
     _tagController = TextEditingController();
     _descController = TextEditingController();
-    _scrollController = ScrollController();
 
     if (widget.place != null) {
       _placeNameController.text = widget.place!.name;
@@ -63,8 +61,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
   void dispose() {
     _placeNameController.dispose();
     _tagController.dispose();
-    _descController.dispose();
-    _scrollController.dispose(); // 자원 낭비를 막기 위해 dispose 권장
+    _descController.dispose(); // 자원 낭비를 막기 위해 dispose 권장
     super.dispose();
   }
 
@@ -142,7 +139,6 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            controller: _scrollController,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
@@ -283,13 +279,6 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                   ),
                   TextField(
                     controller: _descController,
-                    onTap: () {
-                      Timer(const Duration(milliseconds: 300), () {
-                        _scrollController.animateTo(500.0,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.ease);
-                      });
-                    },
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                       hintText: "  어땠는지 적어줘!",
