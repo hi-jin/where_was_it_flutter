@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
-import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
-import 'package:where_was_it_flutter/screens/main_screen.dart';
 import 'package:word_break_text/word_break_text.dart';
 
 class PlaceCard extends StatefulWidget {
@@ -56,15 +54,15 @@ class _PlaceCardState extends State<PlaceCard> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text("잠시만요!!"),
+                                  title: const Text("잠시만요!!"),
                                   content:
-                                      Text("삭제하면 되돌릴 수 없습니다.\n정말 삭제하시겠어요?"),
+                                      const Text("삭제하면 되돌릴 수 없습니다.\n정말 삭제하시겠어요?"),
                                   actions: [
                                     TextButton(
                                         onPressed: () {
                                           if (widget.removeCard != null) {
                                             widget.removeCard!();
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("삭제되었습니다!")));
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("삭제되었습니다!")));
                                           }
                                           Navigator.popUntil(context, (route) => route.isFirst);
                                         },
@@ -77,7 +75,7 @@ class _PlaceCardState extends State<PlaceCard> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text(
+                                        child: const Text(
                                           "아니요!!!",
                                           style: kDefaultTextStyle,
                                         ))
@@ -105,7 +103,7 @@ class _PlaceCardState extends State<PlaceCard> {
                           });
                           Navigator.popUntil(context, (route) => route.isFirst);
                         },
-                        child: Text(
+                        child: const Text(
                           "수정하기",
                           style: kDefaultTextStyle,
                         )),

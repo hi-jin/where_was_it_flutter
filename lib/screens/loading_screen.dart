@@ -28,8 +28,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("로딩중입니다..."),
+      body: SafeArea(
+        child: Center(
+          child: Text("로딩중입니다..."),
+        ),
       ),
     );
   }

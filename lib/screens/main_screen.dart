@@ -145,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
                   decoration: InputDecoration(
                     hintText: "기억나는 단어들을 여기에 입력해봐!",
                     hintStyle: kDefaultTextStyle,
-                    prefix: Text("> "),
+                    prefix: const Text("> "),
                     suffixText: "${_tag.length}/$kPlaceNameMaxLength",
                     counterText: "",
                   ),
@@ -173,7 +173,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     GestureDetector(
                       child: Container(
-                        padding: EdgeInsets.all(3.0),
+                        padding: const EdgeInsets.all(3.0),
                         decoration: BoxDecoration(
                           color: _starPointOrder
                               ? Colors.teal.shade100
@@ -181,8 +181,8 @@ class _MainScreenState extends State<MainScreen> {
                           border: Border.all(color: Colors.teal.shade100),
                         ),
                         child: _starPointOrder && _isListReversed
-                            ? Text("낮은별점순")
-                            : Text("높은별점순"),
+                            ? const Text("낮은별점순")
+                            : const Text("높은별점순"),
                       ),
                       onTap: () {
                         _setStarPointOrder();
@@ -191,7 +191,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(width: 5.0),
                     GestureDetector(
                       child: Container(
-                        padding: EdgeInsets.all(3.0),
+                        padding: const EdgeInsets.all(3.0),
                         decoration: BoxDecoration(
                           color: _visitDateOrder
                               ? Colors.teal.shade100
@@ -199,8 +199,8 @@ class _MainScreenState extends State<MainScreen> {
                           border: Border.all(color: Colors.teal.shade100),
                         ),
                         child: _visitDateOrder && _isListReversed
-                            ? Text("과거방문순")
-                            : Text("최근방문순"),
+                            ? const Text("과거방문순")
+                            : const Text("최근방문순"),
                       ),
                       onTap: () {
                         _setVisitDateOrder();

@@ -13,12 +13,12 @@ class TagCard extends StatelessWidget {
         if (removeTagFunc != null) removeTagFunc!();
       },
       child: Container(
-        padding: EdgeInsets.all(3.0),
+        padding: const EdgeInsets.all(3.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("#$tag"),
-            Icon(Icons.close, size: 15.0,),
+            const Icon(Icons.close, size: 15.0,),
           ],
         ),
         decoration: BoxDecoration(

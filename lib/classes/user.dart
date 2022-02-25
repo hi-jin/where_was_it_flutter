@@ -27,8 +27,6 @@ class User {
         placeList.add(Place.fromJson(stringPlace));
       }
     } catch (e) {
-      print(e);
-
       placeList = <Place>[];
     }
 
