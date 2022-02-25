@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
-import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:where_was_it_flutter/screens/loading_screen.dart';
-import 'package:where_was_it_flutter/screens/main_screen.dart';
+
+GlobalKey one = GlobalKey();
+GlobalKey two = GlobalKey();
+GlobalKey three = GlobalKey();
+GlobalKey four = GlobalKey();
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.light(primary: Colors.teal),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
+        colorScheme: const ColorScheme.light(primary: Colors.teal),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.teal,
         ),
         textTheme: TextTheme(
@@ -28,12 +31,7 @@ class MyApp extends StatelessWidget {
         ),
         iconTheme: IconThemeData(color: Colors.teal.shade700),
       ),
-      initialRoute: LoadingScreen.id,
-      routes: {
-        LoadingScreen.id: (context) => LoadingScreen(),
-        MainScreen.id: (context) => MainScreen(),
-        CreatePlaceScreen.id: (context) => CreatePlaceScreen(),
-      },
+      home: const LoadingScreen(),
     );
   }
 }

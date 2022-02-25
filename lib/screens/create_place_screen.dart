@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
+import 'package:where_was_it_flutter/main.dart';
 
 class CreatePlaceScreen extends StatefulWidget {
   static String id = UniqueKey().toString();
@@ -42,6 +44,18 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
       _tags = widget.place!.tags;
       _visitDate = widget.place!.visitDate;
       _starPoint = widget.place!.starPoint;
+    }
+
+    if (User.needHelp) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) async {
+        Timer(
+            const Duration(milliseconds: 300),
+                () => ShowCaseWidget.of(context)!.startShowCase([
+              four,
+            ]));
+      });
+
+      User.needHelp = false;
     }
   }
 
@@ -137,36 +151,44 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextButton(
-                        child: Text(
-                          _visitDate ==
-                                  DateTime(DateTime.now().year,
-                                      DateTime.now().month, DateTime.now().day)
-                              ? "오늘"
-                              : _visitDate ==
-                                      DateTime(
-                                          DateTime.now().year,
-                                          DateTime.now().month,
-                                          DateTime.now().day - 1)
-                                  ? "어제"
-                                  : "그때",
-                          style: kDefaultTextStyle.copyWith(fontSize: 25.0),
+                      Showcase(
+                        key: four,
+                        description:
+                            "예전에 다녀왔는데 추가를 못 했다구?\n그럼 여길 누르면 날짜를 바꿀 수 있어!",
+                        descTextStyle: kDefaultTextStyle,
+                        child: TextButton(
+                          child: Text(
+                            _visitDate ==
+                                    DateTime(
+                                        DateTime.now().year,
+                                        DateTime.now().month,
+                                        DateTime.now().day)
+                                ? "오늘"
+                                : _visitDate ==
+                                        DateTime(
+                                            DateTime.now().year,
+                                            DateTime.now().month,
+                                            DateTime.now().day - 1)
+                                    ? "어제"
+                                    : "그때",
+                            style: kDefaultTextStyle.copyWith(fontSize: 25.0),
+                          ),
+                          onPressed: () {
+                            showDatePicker(
+                                    context: context,
+                                    initialDate: _visitDate,
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime.now())
+                                .then((value) {
+                              if (value != null) {
+                                setState(() {
+                                  _visitDate = DateTime(
+                                      value.year, value.month, value.day);
+                                });
+                              }
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          showDatePicker(
-                                  context: context,
-                                  initialDate: _visitDate,
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime.now())
-                              .then((value) {
-                            if (value != null) {
-                              setState(() {
-                                _visitDate = DateTime(
-                                    value.year, value.month, value.day);
-                              });
-                            }
-                          });
-                        },
                       ),
                       Text(
                         "방문한 곳 이름이 뭐야?",

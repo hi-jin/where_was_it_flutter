@@ -8,6 +8,8 @@ class User {
   // 지금까지 방문했던 장소 리스트
   static List<Place> visitedPlaceList = <Place>[];
 
+  static bool needHelp = false;
+
   static void initUser() async {
     visitedPlaceList = await _getPlaceListFromFile();
   }
@@ -27,11 +29,20 @@ class User {
         placeList.add(Place.fromJson(stringPlace));
       }
     } catch (e) {
-      placeList = <Place>[];
+      needHelp = true;
+      placeList = <Place>[
+        Place(
+          name: "그냥맛집",
+          starPoint: 4,
+          visitDate: DateTime(2022, 2, 25),
+          tags: {"파스타", "피자", "양식", "물"},
+          desc: "양식 맛집인데, 물이 제일 맛있다.",
+        )
+      ];
     }
 
     return placeList;
-  } // TODO: Storage이용하기
+  }
 
   static void saveUser() async {
     visitedPlaceList.sort((a, b) {

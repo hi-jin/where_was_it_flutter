@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/screens/main_screen.dart';
 
@@ -19,10 +20,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
 
     User.initUser();
-    Timer(const Duration(seconds: 3), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, MainScreen.id, (route) => route.isCurrent);
-    }); // 데이터 로딩 완료 후 다음 화면 전시 TODO: 이 화면에서 데이터 로드하기
+    Timer(const Duration(seconds: 1, milliseconds: 500), () {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ShowCaseWidget(
+                      builder: Builder(
+                    builder: (context) => MainScreen(),
+                  ))),
+          (route) => route.isCurrent);
+    }); // 데이터 로딩 완료 후 다음 화면 전시
   }
 
   @override

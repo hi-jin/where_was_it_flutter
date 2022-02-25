@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/place_card.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
+import 'package:where_was_it_flutter/main.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -60,6 +64,18 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _tagController = TextEditingController();
+
+    if (User.needHelp) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) async {
+        Timer(const Duration(milliseconds: 300),
+                () => ShowCaseWidget.of(context)!.startShowCase([one, two]));
+      });
+    }
+  }
+
+  void _help() {
+    User.needHelp = true;
+    ShowCaseWidget.of(context)!.startShowCase([one, two]);
   }
 
   List<Widget> drawPlaceCardList(List<Place> placeList) {
@@ -79,8 +95,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return placeCardList;
-  } // TODO: placeList 받아오기
-
+  }
 
   Wrap _drawTagCardList(Set<String> tags) {
     List<Widget> tagCardList = <Widget>[];
@@ -98,7 +113,9 @@ class _MainScreenState extends State<MainScreen> {
     if (tags.isEmpty) {
       _placeList = User.visitedPlaceList;
     } else {
-      List<Place> searchedList = List<Place>.from(User.visitedPlaceList.where((element) => element.tags.containsAll(_tags) || _tags.contains(element.name)));
+      List<Place> searchedList = List<Place>.from(User.visitedPlaceList.where(
+          (element) =>
+              element.tags.containsAll(_tags) || _tags.contains(element.name)));
       searchedList.sort((a, b) {
         if (_tags.contains(a.name)) {
           return -1;
@@ -123,11 +140,24 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false, // textfield 전시되는 경우, 화면 겹치는 오류 해결
       appBar: AppBar(
-        title: GestureDetector(
-          child: const Text("그때 거기"),
-          onTap: () {
-            Navigator.popUntil(context, (route) => route.isFirst); // 첫 화면까지 pop
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              child: const Text("그때 거기"),
+              onTap: () {
+                Navigator.popUntil(
+                    context, (route) => route.isFirst); // 첫 화면까지 pop
+              },
+            ),
+            GestureDetector(
+              onTap: () => _help(),
+              child: Text(
+                "도움말",
+                style: kDefaultTextStyle.copyWith(fontSize: 25.0),
+              ),
+            ),
+          ],
         ),
       ),
       body: SafeArea(
@@ -171,22 +201,27 @@ class _MainScreenState extends State<MainScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                      child: Container(
-                        padding: const EdgeInsets.all(3.0),
-                        decoration: BoxDecoration(
-                          color: _starPointOrder
-                              ? Colors.teal.shade100
-                              : Theme.of(context).cardColor,
-                          border: Border.all(color: Colors.teal.shade100),
+                    Showcase(
+                      key: one,
+                      description: '두 번 클릭해서 반대로 정렬할 수 있어!',
+                      descTextStyle: kDefaultTextStyle,
+                      child: GestureDetector(
+                        child: Container(
+                          padding: const EdgeInsets.all(3.0),
+                          decoration: BoxDecoration(
+                            color: _starPointOrder
+                                ? Colors.teal.shade100
+                                : Theme.of(context).cardColor,
+                            border: Border.all(color: Colors.teal.shade100),
+                          ),
+                          child: _starPointOrder && _isListReversed
+                              ? const Text("낮은별점순")
+                              : const Text("높은별점순"),
                         ),
-                        child: _starPointOrder && _isListReversed
-                            ? const Text("낮은별점순")
-                            : const Text("높은별점순"),
+                        onTap: () {
+                          _setStarPointOrder();
+                        },
                       ),
-                      onTap: () {
-                        _setStarPointOrder();
-                      },
                     ), // 높은 별점순 정렬 버튼
                     const SizedBox(width: 5.0),
                     GestureDetector(
@@ -218,14 +253,26 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.pushNamed(context, CreatePlaceScreen.id);
-          setState(() {
-            _placeList = User.visitedPlaceList; // 화면 업데이트를 위해 새로 받아옴
-          });
-        },
+      floatingActionButton: Showcase(
+        key: two,
+        description:
+            '놀러갔던 장소를 기록할 수 있어!\n1.새로운 장소  2. 기존에 방문했던 장소\n기존 장소를 다시 입력하면, 방문 횟수와 최근 방문 일자가 기록돼!',
+        descTextStyle: kDefaultTextStyle,
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ShowCaseWidget(
+                            builder: Builder(
+                          builder: (context) => CreatePlaceScreen(),
+                        ))));
+            setState(() {
+              _placeList = User.visitedPlaceList; // 화면 업데이트를 위해 새로 받아옴
+            });
+          },
+        ),
       ),
     );
   }
