@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hijeans.where_was_it_flutter">
    <application
-        android:label="where_was_it_flutter"
+        android:label="그때 거기"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
