@@ -61,8 +61,14 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> drawPlaceCardList(List<Place> placeList) {
     List<Widget> placeCardList = <Widget>[];
 
-    for (Place place in placeList) {
-      placeCardList.add(PlaceCard(place: place));
+    for (var i = 0; i < placeList.length; i++) {
+      placeCardList.add(PlaceCard(place: placeList[i], removeCard: () {
+        setState(() {
+          placeCardList.removeAt(i);
+          _placeList.removeAt(i);
+          User.saveUser();
+        });
+      },));
     }
 
     return placeCardList;
