@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
+import 'package:where_was_it_flutter/data/color_styles.dart';
 
 class User {
   // 지금까지 방문했던 장소 리스트
   static List<Place> visitedPlaceList = <Place>[];
 
   static bool needHelp = false;
+
+  static ColorStyle selectedColorTheme = ColorStyle.purple;
 
   static void initUser() async {
     visitedPlaceList = await _getPlaceListFromFile();

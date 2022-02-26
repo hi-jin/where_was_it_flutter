@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:where_was_it_flutter/classes/place.dart';
+import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
 import 'package:word_break_text/word_break_text.dart';
@@ -39,6 +40,7 @@ class _PlaceCardState extends State<PlaceCard> {
     String desc = widget.place.desc;
 
     return Card(
+      color: User.selectedColorTheme.lightPrimary,
       child: GestureDetector(
         onTap: () {
           if (desc == "") desc = " ";

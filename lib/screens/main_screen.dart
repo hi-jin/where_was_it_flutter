@@ -6,6 +6,7 @@ import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/place_card.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
+import 'package:where_was_it_flutter/data/color_styles.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/main.dart';
 import 'package:where_was_it_flutter/screens/create_place_screen.dart';
@@ -220,9 +221,9 @@ class _MainScreenState extends State<MainScreen> {
                           padding: const EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
                             color: _starPointOrder
-                                ? Colors.teal.shade100
+                                ? User.selectedColorTheme.lightPrimary
                                 : Theme.of(context).cardColor,
-                            border: Border.all(color: Colors.teal.shade100),
+                            border: Border.all(color: User.selectedColorTheme.primary),
                           ),
                           child: _starPointOrder && _isListReversed
                               ? const Text("낮은별점순")
@@ -239,9 +240,9 @@ class _MainScreenState extends State<MainScreen> {
                         padding: const EdgeInsets.all(3.0),
                         decoration: BoxDecoration(
                           color: _visitDateOrder
-                              ? Colors.teal.shade100
+                              ? User.selectedColorTheme.lightPrimary
                               : Theme.of(context).cardColor,
-                          border: Border.all(color: Colors.teal.shade100),
+                          border: Border.all(color: User.selectedColorTheme.primary),
                         ),
                         child: _visitDateOrder && _isListReversed
                             ? const Text("과거방문순")

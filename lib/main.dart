@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:where_was_it_flutter/classes/user.dart';
+import 'package:where_was_it_flutter/data/color_styles.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/screens/loading_screen.dart';
 
@@ -27,9 +29,9 @@ class MyApp extends StatelessWidget {
         Locale("ko", "KR"),
       ],
       theme: ThemeData(
-        colorScheme: const ColorScheme.light(primary: Colors.teal),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.teal,
+        colorScheme: ColorScheme.light(primary: User.selectedColorTheme.primary),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: User.selectedColorTheme.accent,
         ),
         textTheme: TextTheme(
           headline6: kDefaultTextStyle.copyWith(fontSize: 30.0),
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
           // ListTile.title
           bodyText2: kDefaultTextStyle, // default
         ),
-        iconTheme: IconThemeData(color: Colors.teal.shade700),
+        iconTheme: IconThemeData(color: User.selectedColorTheme.darkPrimary),
       ),
       home: const LoadingScreen(),
     );
