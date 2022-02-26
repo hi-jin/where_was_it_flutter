@@ -25,7 +25,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
   late TextEditingController _tagController;
   late TextEditingController _descController;
   String _placeName = "";
-  int _starPoint = 3; // 점수
+  int _starPoint = 0; // 점수
   String _tag = ""; // 현재 입력중인 태그
   Set<String> _tags = {};
   DateTime _visitDate =
@@ -361,6 +361,11 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
             } else if (tags.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("한 개 이상의 관련 단어를 입력해주세요!",
+                      style: kDefaultTextStyle)));
+            } else if (_starPoint == 0) {
+              FocusScope.of(context).unfocus();
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("별점을 1점 이상 입력해주세요!",
                       style: kDefaultTextStyle)));
             } else {
               if (widget.place == null) {
