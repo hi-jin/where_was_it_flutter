@@ -23,7 +23,7 @@ class ColorStyle {
   static get purple => ColorStyle(
     darkPrimary: const Color(0xff8a39e1),
     primary: const Color(0xff9c51e0),
-    lightPrimary: const Color(0xffe1bee7),
+    lightPrimary: const Color(0xefFDEBF7),
     accent: const Color(0xffecc488),
   );
 }
