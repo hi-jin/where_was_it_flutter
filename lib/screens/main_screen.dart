@@ -320,11 +320,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   child: Center(
                       child: Text(
                     "방문 기록하기",
-                    style: kDefaultTextStyle.copyWith(color: Colors.black),
+                    style: kDefaultTextStyle.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
                   )),
                 ),
               ),
               onPressed: () async {
+                _animationController.reverse();
                 await Navigator.push(
                     context,
                     MaterialPageRoute(
