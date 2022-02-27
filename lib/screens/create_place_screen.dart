@@ -204,7 +204,7 @@ class _CreatePlaceScreenState extends State<CreatePlaceScreen> {
                                             onPressed: () {
                                               Navigator.pop(context, value);
                                             },
-                                            child: Text("확인"),
+                                            child: Text("확인", style: kDefaultTextStyle.copyWith(fontSize: 30.0),),
                                           )
                                         ],
                                       )));
