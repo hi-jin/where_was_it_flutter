@@ -6,10 +6,10 @@ import 'package:where_was_it_flutter/classes/place.dart';
 import 'package:where_was_it_flutter/classes/user.dart';
 import 'package:where_was_it_flutter/components/place_card.dart';
 import 'package:where_was_it_flutter/components/tag.dart';
-import 'package:where_was_it_flutter/data/color_styles.dart';
 import 'package:where_was_it_flutter/data/constants.dart';
 import 'package:where_was_it_flutter/main.dart';
-import 'package:where_was_it_flutter/screens/create_place_screen.dart';
+
+import 'create_place_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static String id = UniqueKey().toString();
@@ -20,7 +20,10 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _rotateAnimation;
+  late AnimationController _animationController;
   late TextEditingController _tagController;
   late List<Place> _placeList = User.visitedPlaceList;
 
@@ -75,6 +78,15 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _tagController = TextEditingController();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+
+    _slideAnimation = Tween<Offset>(
+            begin: const Offset(0.0, 5.0), end: const Offset(0.05, 0.0))
+        .animate(_animationController);
+
+    _rotateAnimation =
+        Tween<double>(begin: 0.0, end: 0.62).animate(_animationController);
 
     if (User.needHelp) {
       WidgetsBinding.instance!.addPostFrameCallback((_) async {
@@ -82,6 +94,13 @@ class _MainScreenState extends State<MainScreen> {
             () => ShowCaseWidget.of(context)!.startShowCase([one, two]));
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _tagController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _help() {
@@ -151,24 +170,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false, // textfield 전시되는 경우, 화면 겹치는 오류 해결
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              child: const Text("그때 거기"),
-              onTap: () {
-                Navigator.popUntil(
-                    context, (route) => route.isFirst); // 첫 화면까지 pop
-              },
-            ),
-            GestureDetector(
-              onTap: () => _help(),
-              child: Text(
-                "도움말",
-                style: kDefaultTextStyle.copyWith(fontSize: 25.0),
-              ),
-            ),
-          ],
+        title: GestureDetector(
+          child: const Text("그때 거기"),
+          onTap: () {
+            Navigator.popUntil(context, (route) => route.isFirst); // 첫 화면까지 pop
+          },
         ),
       ),
       body: SafeArea(
@@ -223,7 +229,8 @@ class _MainScreenState extends State<MainScreen> {
                             color: _starPointOrder
                                 ? User.selectedColorTheme.lightPrimary
                                 : Theme.of(context).cardColor,
-                            border: Border.all(color: User.selectedColorTheme.primary),
+                            border: Border.all(
+                                color: User.selectedColorTheme.primary),
                           ),
                           child: _starPointOrder && _isListReversed
                               ? const Text("낮은별점순")
@@ -242,7 +249,8 @@ class _MainScreenState extends State<MainScreen> {
                           color: _visitDateOrder
                               ? User.selectedColorTheme.lightPrimary
                               : Theme.of(context).cardColor,
-                          border: Border.all(color: User.selectedColorTheme.primary),
+                          border: Border.all(
+                              color: User.selectedColorTheme.primary),
                         ),
                         child: _visitDateOrder && _isListReversed
                             ? const Text("과거방문순")
@@ -264,26 +272,96 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      floatingActionButton: Showcase(
-        key: two,
-        description:
-            '놀러갔던 장소를 기록할 수 있어!\n1.새로운 장소  2. 기존에 방문했던 장소\n기존 장소를 다시 입력하면, 방문 횟수와 최근 방문 일자가 기록돼!',
-        descTextStyle: kDefaultTextStyle,
-        child: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ShowCaseWidget(
-                            builder: Builder(
-                          builder: (context) => CreatePlaceScreen(),
-                        ))));
-            setState(() {
-              _placeList = User.visitedPlaceList; // 화면 업데이트를 위해 새로 받아옴
-            });
-          },
-        ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SlideTransition(
+            position: _slideAnimation,
+            child: TextButton(
+              child: PhysicalModel(
+                color: User.selectedColorTheme.accent,
+                shadowColor: Colors.grey,
+                elevation: 6.0,
+                borderRadius: BorderRadius.circular(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  height: 50.0,
+                  width: 120.0,
+                  child: Center(
+                      child: Text(
+                    "도움말",
+                    style: kDefaultTextStyle.copyWith(color: Colors.black),
+                  )),
+                ),
+              ),
+              onPressed: () {
+                _animationController.reverse();
+                _help();
+              },
+            ),
+          ), // 도움말
+          SlideTransition(
+            position: _slideAnimation,
+            child: TextButton(
+              child: PhysicalModel(
+                color: User.selectedColorTheme.accent,
+                shadowColor: Colors.grey,
+                elevation: 6.0,
+                borderRadius: BorderRadius.circular(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  height: 50.0,
+                  width: 120.0,
+                  child: Center(
+                      child: Text(
+                    "방문 기록하기",
+                    style: kDefaultTextStyle.copyWith(color: Colors.black),
+                  )),
+                ),
+              ),
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ShowCaseWidget(
+                                builder: Builder(
+                              builder: (context) => CreatePlaceScreen(),
+                            ))));
+                setState(() {
+                  _placeList = User.visitedPlaceList; // 화면 업데이트를 위해 새로 받아옴
+                });
+              },
+            ),
+          ), // 방문 기록하기
+          const SizedBox(height: 10.0),
+          Showcase(
+            key: two,
+            description:
+                '놀러갔던 장소를 기록할 수 있어!\n1.새로운 장소  2. 기존에 방문했던 장소\n기존 장소를 다시 입력하면, 방문 횟수와 최근 방문 일자가 기록돼!',
+            descTextStyle: kDefaultTextStyle,
+            child: FloatingActionButton(
+              child: RotationTransition(
+                turns: _rotateAnimation,
+                child: const Icon(
+                  Icons.add,
+                  size: 30.0,
+                ),
+              ),
+              onPressed: () {
+                if (_animationController.status == AnimationStatus.completed) {
+                  _animationController.reverse();
+                } else {
+                  _animationController.forward();
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

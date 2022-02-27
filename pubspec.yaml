@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^2.0.9
   easy_autocomplete: ^1.5.0
   showcaseview: ^1.1.4
+  floating_action_bubble: 1.1.3
   flutter_localizations:
     sdk: flutter
 
