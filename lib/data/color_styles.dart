@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ColorStyle {
-  Color darkPrimary;
-  Color primary;
-  Color lightPrimary;
-  Color accent;
+  final Color darkPrimary;
+  final Color primary;
+  final Color lightPrimary;
+  final Color accent;
 
   ColorStyle({
     required this.darkPrimary,
