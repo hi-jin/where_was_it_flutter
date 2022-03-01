@@ -319,7 +319,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   width: 120.0,
                   child: Center(
                       child: Text(
-                    "방문 기록하기",
+                    "방문기록하기",
                     style: kDefaultTextStyle.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
                   )),
                 ),

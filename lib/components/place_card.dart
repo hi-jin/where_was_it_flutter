@@ -136,8 +136,8 @@ class _PlaceCardState extends State<PlaceCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                      "최근 방문 ${visitDate.month}월 ${visitDate.day}일, ${visitDate.year}"),
-                  Text("방문 횟수 $visitCount회")
+                      "최근방문 ${visitDate.month}월 ${visitDate.day}일,${visitDate.year}"),
+                  Text("방문횟수 $visitCount회")
                 ],
               ),
             ],

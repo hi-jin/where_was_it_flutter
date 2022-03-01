@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const TextStyle kDefaultTextStyle = TextStyle(
-  fontFamily: "GamjaFlower-Regular",
+  fontFamily: "Gaegu",
   fontSize: 20.0,
 );
 
